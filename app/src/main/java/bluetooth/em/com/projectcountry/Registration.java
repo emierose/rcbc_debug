@@ -39,6 +39,7 @@ public class Registration extends AppCompatActivity implements RegistrationInter
         mModel.registerObserver(this);
         mController = new RegistrationController(this,mModel);
         mController.requestCountry();
+        mController.requestBankBranches();
 
         findViewById(R.id.btn_submit).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -58,6 +59,7 @@ public class Registration extends AppCompatActivity implements RegistrationInter
         holder.tv_t_state.startAnimation(animation);
         holder.tv_place_country.startAnimation(animation);
         holder.tv_place_state.startAnimation(animation);
+        holder.tv_nationality.startAnimation(animation);
         holder.p_country.setOnItemSelectedListener(mController.on_p_country_select());
         holder.s_country.setOnItemSelectedListener(mController.on_s_country_select());
         holder.t_country.setOnItemSelectedListener(mController.on_t_country_select());
@@ -90,12 +92,13 @@ public class Registration extends AppCompatActivity implements RegistrationInter
         holder.bday_state = (Spinner)findViewById(R.id.sp_bplace_state);
         holder.status = (Spinner)findViewById(R.id.sp_status);
         holder.mothername = (EditText)findViewById(R.id.et_mothername);
-        holder.nationality = (EditText)findViewById(R.id.et_nationality);
+        holder.nationality = (Spinner)findViewById(R.id.sp_nationality);
+        holder.tv_nationality = (TextView)findViewById(R.id.tv_nationality);
         holder.tin = (EditText)findViewById(R.id.et_tin_no);
         holder.sss = (EditText)findViewById(R.id.et_sss);
         holder.passport = (EditText)findViewById(R.id.et_passport);
-        holder.acr = (EditText)findViewById(R.id.et_cardno);
-        holder.cadrno = (EditText)findViewById(R.id.et_acr);
+        holder.acr = (EditText)findViewById(R.id.et_acr);
+        holder.cadrno = (EditText)findViewById(R.id.et_cardno);
         holder.ccv = (EditText)findViewById(R.id.et_ccv);
         holder.p_add = (EditText)findViewById(R.id.et_p_address);
         holder.p_country = (Spinner)findViewById(R.id.sp_p_country);

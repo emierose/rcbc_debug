@@ -19,7 +19,7 @@ public class RegistrationHolder {
     public Spinner bday_state;
     public Spinner status;
     public EditText mothername;
-    public EditText nationality;
+    public Spinner nationality;
     public EditText tin;
     public EditText sss;
     public EditText passport;
@@ -53,4 +53,5 @@ public class RegistrationHolder {
     public TextView tv_t_state;
     public TextView tv_place_country;
     public TextView tv_place_state;
+    public TextView tv_nationality;
 }

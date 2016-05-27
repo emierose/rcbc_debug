@@ -14,6 +14,8 @@ import UnlitechDevFramework.src.ud.framework.data.Response;
 import UnlitechDevFramework.src.ud.framework.data.enums.Status;
 import UnlitechDevFramework.src.ud.framework.webservice.data.WebServiceInfo;
 import bluetooth.em.com.projectcountry.R;
+import bluetooth.em.com.projectcountry.data.BankObjects;
+import bluetooth.em.com.projectcountry.data.BranchObjects;
 import bluetooth.em.com.projectcountry.data.CountryObjects;
 import bluetooth.em.com.projectcountry.data.JSONFlag;
 import bluetooth.em.com.projectcountry.data.Message;
@@ -33,10 +35,12 @@ public class RegistrationController {
     public ArrayList<CountryObjects> s_stateObjects ;
     public ArrayList<CountryObjects> t_stateObjects ;
     public ArrayList<CountryObjects> bplace_stateObjects ;
+    public ArrayList<BankObjects> bank_objects ;
     public static final int TYPE_P_COUNTRY = 2;
     public static final int TYPE_S_COUNTRY= 3;
     public static final int TYPE_T_COUNTRY= 4;
     public static final int TYPE_BPLACE_COUNTRY= 5;
+    public static final int TYPE_BRANCH= 6;
     public RegistrationController(RegistrationInterface view, RegistrationModel model) {
         mModel = model;
         mView = view;
@@ -45,6 +49,7 @@ public class RegistrationController {
         s_stateObjects = new ArrayList<CountryObjects>();
         t_stateObjects = new ArrayList<CountryObjects>();
         bplace_stateObjects = new ArrayList<CountryObjects>();
+        bank_objects = new ArrayList<BankObjects>();
     }
 
     public void requestCountry() {
@@ -58,7 +63,17 @@ public class RegistrationController {
             System.out.println(e.getMessage());
         }
     }
-
+    public void requestBankBranches() {
+        try{
+            WebServiceInfo wsInfo = new WebServiceInfo("http://52.77.224.133:8089/ws_user/fetch_bank_branches");
+            mModel.sendRequest(mView.getContext(), wsInfo, TYPE_BRANCH);
+        } catch (Exception e) {
+//            RegistrationHolder holder = mView.getregistrationCredentials();
+//            holder.tv_p_country.setCompoundDrawables(mView.getContext().getResources().getDrawable(R.drawable.ic_reload),null,null,null);
+//            holder.tv_p_country.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_reload,0,0,0);
+//            System.out.println(e.getMessage());
+        }
+    }
     public void submit() {
         WebServiceInfo wsInfo = new WebServiceInfo("http://52.77.224.133:8089/ws_user/register_user");
         RegistrationHolder holder = mView.getregistrationCredentials();
@@ -66,40 +81,42 @@ public class RegistrationController {
         String s_country_code = countryObjects.get(holder.s_country.getSelectedItemPosition() - 1).COUNTRY_CODE;
         String t_country_code = countryObjects.get(holder.t_country.getSelectedItemPosition() - 1).COUNTRY_CODE;
         String bplace_country_code = countryObjects.get(holder.bday_country.getSelectedItemPosition() - 1).COUNTRY_CODE;
+        String nationality = countryObjects.get(holder.nationality.getSelectedItemPosition() - 1).COUNTRY_CODE;
         wsInfo.addParam("username", holder.username.getText().toString());
-        wsInfo.addParam("password",holder.username.getText().toString());
-        wsInfo.addParam("fname",holder.username.getText().toString());
-        wsInfo.addParam("mname",holder.username.getText().toString());
-        wsInfo.addParam("lname",holder.username.getText().toString());
-        wsInfo.addParam("dob",holder.username.getText().toString());
+        wsInfo.addParam("password",holder.tpass.getText().toString());
+        wsInfo.addParam("fname",holder.firstname.getText().toString());
+        wsInfo.addParam("mname",holder.middlename.getText().toString());
+        wsInfo.addParam("lname",holder.lastname.getText().toString());
+        wsInfo.addParam("dob",holder.bdate.getText().toString());
         wsInfo.addParam("dob_cty",bplace_country_code);
         wsInfo.addParam("dob_state", holder.bday_state.getSelectedItem().toString());
-        wsInfo.addParam("marital",holder.username.getText().toString());
-        wsInfo.addParam("mother_name",holder.username.getText().toString());
-        wsInfo.addParam("nationality",holder.username.getText().toString());
-        wsInfo.addParam("tin",holder.username.getText().toString());
-        wsInfo.addParam("sss",holder.username.getText().toString());
-        wsInfo.addParam("passport",holder.username.getText().toString());
-        wsInfo.addParam("acr",holder.username.getText().toString());
-        wsInfo.addParam("card_no",holder.username.getText().toString());
-        wsInfo.addParam("ccv",holder.username.getText().toString());
-        wsInfo.addParam("p_address",holder.username.getText().toString());
+        wsInfo.addParam("marital", holder.status.getSelectedItem().toString());
+        wsInfo.addParam("mother_name",holder.mothername.getText().toString());
+        wsInfo.addParam("nationality",nationality);
+        wsInfo.addParam("tin",holder.tin.getText().toString());
+        wsInfo.addParam("sss",holder.sss.getText().toString());
+        wsInfo.addParam("passport",holder.passport.getText().toString());
+        wsInfo.addParam("acr",holder.acr.getText().toString());
+        wsInfo.addParam("card_no",holder.cadrno.getText().toString());
+        wsInfo.addParam("ccv",holder.ccv.getText().toString());
+        wsInfo.addParam("p_address",holder.p_add.getText().toString());
         wsInfo.addParam("p_country",p_country_code);
-        wsInfo.addParam("p_state",holder.username.getText().toString());
-        wsInfo.addParam("s_address",holder.username.getText().toString());
+        wsInfo.addParam("p_state",holder.p_state.getSelectedItem().toString());
+        wsInfo.addParam("s_address",holder.s_add.getText().toString());
         wsInfo.addParam("s_country",s_country_code);
-        wsInfo.addParam("s_state",holder.username.getText().toString());
-        wsInfo.addParam("t_address",holder.username.getText().toString());
+        wsInfo.addParam("s_state",holder.s_state.getSelectedItem().toString());
+        wsInfo.addParam("t_address",holder.t_add.getText().toString());
         wsInfo.addParam("t_country",t_country_code);
-        wsInfo.addParam("t_state",holder.username.getText().toString());
-        wsInfo.addParam("residential",holder.username.getText().toString());
-        wsInfo.addParam("office",holder.username.getText().toString());
-        wsInfo.addParam("mobile",holder.username.getText().toString());
-        wsInfo.addParam("p_email",holder.username.getText().toString());
-        wsInfo.addParam("s_email",holder.username.getText().toString());
-        wsInfo.addParam("t_email",holder.username.getText().toString());
-        wsInfo.addParam("b_code",holder.username.getText().toString());
-        wsInfo.addParam("b_branch",holder.username.getText().toString());
+        wsInfo.addParam("t_state",holder.t_state.getSelectedItem().toString());
+        wsInfo.addParam("residential",holder.residential.getText().toString());
+        wsInfo.addParam("office",holder.office.getText().toString());
+        wsInfo.addParam("mobile",holder.mobile.getText().toString());
+        wsInfo.addParam("p_email",holder.p_email.getText().toString());
+        wsInfo.addParam("s_email",holder.s_email.getText().toString());
+        wsInfo.addParam("t_email",holder.t_email.getText().toString());
+        wsInfo.addParam("b_code", holder.code.getText().toString());
+        wsInfo.addParam("b_branch",holder.branch
+                .getText().toString());
 
         //Tells the model to send the personal info
         mModel.registrationRequest(mView.getContext(), wsInfo, 0);
@@ -194,6 +211,31 @@ public class RegistrationController {
                             }
                             loadStateList(TYPE_BPLACE_COUNTRY);
                             break;
+                        case TYPE_BRANCH:
+                            System.out.println("RESPONSE6:" + response.getResponse());
+                            JSONArray array_data7 = jo.getJSONArray("result_data");
+                            for (int i = 0; i < array_data7.length(); i++) {
+                                JSONObject data = array_data7.getJSONObject(i);
+                                ArrayList<BranchObjects> BRANCHES = new ArrayList<BranchObjects>();
+                                BankObjects ob = new BankObjects();
+                                ob.BANK_ID = data.getString("Bank_id");
+                                ob.BANK_NAME = data.getString("Bank_name");
+                                JSONArray array_data8 = data.getJSONArray("Branches");
+                                for (int j = 0; j < array_data8.length(); j++) {
+                                    JSONObject data2 = array_data8.getJSONObject(j);
+                                    BranchObjects ob2 = new BranchObjects();
+                                    System.out.println("branch id:" + data2.getString("branch_id"))
+                                    ;
+                                    ob2.BRANCH_ID = data2.getString("branch_id");
+                                    ob2.BRANCH_ADDRESS = data2.getString("branch_address");
+                                    BRANCHES.add(ob2);
+                                }
+                                System.out.println("bank id:" + data.getString("Bank_id"));
+                                ob.BRANCHES = BRANCHES;
+                                bank_objects.add(ob);
+                            }
+//                            loadStateList(TYPE_BPLACE_COUNTRY);
+                            break;
                     }
                 } else {
                     mView.showError(Title.REGISTRATION, jo.getString(JSONFlag.MESSAGE), null);
@@ -270,6 +312,7 @@ public class RegistrationController {
             holder.tv_place_country.clearAnimation();
             holder.tv_place_state.clearAnimation();
             holder.text.clearAnimation();
+            holder.tv_nationality.clearAnimation();
             ArrayList<String> forSpinner = new ArrayList<String>();
             for (int i = 0; i < countryObjects.size(); i++) {
                 forSpinner.add(countryObjects.get(i).COUNTRY_DESC);
@@ -281,6 +324,7 @@ public class RegistrationController {
         holder.s_country.setAdapter(adapter);
         holder.t_country.setAdapter(adapter);
         holder.bday_country.setAdapter(adapter);
+        holder.nationality.setAdapter(adapter);
     }
 
     public AdapterView.OnItemSelectedListener on_p_country_select() {
