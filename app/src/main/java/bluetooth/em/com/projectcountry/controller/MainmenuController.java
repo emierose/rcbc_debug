@@ -1,0 +1,145 @@
+package bluetooth.em.com.projectcountry.controller;
+
+import android.content.Intent;
+import android.view.Menu;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+
+import UnlitechDevFramework.src.ud.framework.data.Response;
+import UnlitechDevFramework.src.ud.framework.data.enums.Status;
+import UnlitechDevFramework.src.ud.framework.webservice.data.WebServiceInfo;
+import bluetooth.em.com.projectcountry.R;
+import bluetooth.em.com.projectcountry.activity.MapActivity;
+import bluetooth.em.com.projectcountry.data.AccessData;
+import bluetooth.em.com.projectcountry.data.Constants;
+import bluetooth.em.com.projectcountry.data.JSONFlag;
+import bluetooth.em.com.projectcountry.data.Message;
+import bluetooth.em.com.projectcountry.data.Title;
+import bluetooth.em.com.projectcountry.data.User;
+import bluetooth.em.com.projectcountry.model.AppGeneralModel;
+import bluetooth.em.com.projectcountry.model.UserModel;
+import bluetooth.em.com.projectcountry.view.MenuHolder;
+import bluetooth.em.com.projectcountry.view.MenuInterface;
+
+/**
+ * Created by Em on 6/1/2016.
+ */
+public class MainmenuController {
+    MenuInterface mView;
+    AppGeneralModel mModel;
+    ArrayList<AccessData> accessDataObjects;
+    public MainmenuController(MenuInterface view, AppGeneralModel model) {
+        mView=view;
+        mModel=model;
+        accessDataObjects = new ArrayList<>();
+    }
+
+    public void requestUserAccess() {
+        try {
+            WebServiceInfo wsInfo = new WebServiceInfo("http://52.77.224.133:8089/ws_user/get_user_access");
+            User user= new UserModel().getCurrentUser(mView.getContext());
+            wsInfo.addParam("client_id",user.getClientId());
+            wsInfo.addParam("session_id",user.getSessionId());
+            mModel.sendRequest(mView.getContext(), wsInfo, 1);
+        } catch (Exception e) {
+        }
+    }
+
+    public void requestLastLocation() {
+        try {
+            System.out.println("SENDING");
+            User user= new UserModel().getCurrentUser(mView.getContext());
+            WebServiceInfo wsInfo = new WebServiceInfo("http://52.77.224.133:8089/ws_user/fetch_merchant_last_location");
+            wsInfo.addParam("client_id",user.getClientId());
+            wsInfo.addParam("session_id",user.getSessionId());
+            mModel.sendRequestWithProgressbar(mView.getContext(), wsInfo, 2);
+        } catch (Exception e) {
+        }
+    }
+    public void processResponse(Response response) {
+        System.out.println("RESPONSE:"+response.getResponse());
+
+        try {
+            if (response.getStatus() == Status.SUCCESS) {
+                JSONObject jo = new JSONObject(response.getResponse());
+                if (jo.getString(JSONFlag.STATUS).equals(JSONFlag.SUCCESSFUL)) {
+                    JSONArray array = jo.getJSONArray("result_data");
+                    for (int i=0; i<array.length();i++){
+                        ArrayList<String> modules = new ArrayList<>();
+                        JSONArray array2 = array.getJSONArray(i);
+                        AccessData ob = new AccessData();
+                        ob.GROUP = i;
+                        for (int j=0; j<array2.length();j++){
+                            modules.add(array2.getString(j));
+                        }
+                        ob.MODULE_NAME = modules;
+                        accessDataObjects.add(ob);
+                    }
+                    MenuHolder holder = mView.getrCredentials();
+                    Menu m =holder. navigationView.getMenu();
+                    for(int k = 0; k<accessDataObjects.size();k++){
+//                        SubMenu topChannelMenu = m.addSubMenu("");
+                        for(int l = 0; l<accessDataObjects.get(k).MODULE_NAME.size();l++){
+                            m.add(k, Menu.NONE, Menu.NONE, accessDataObjects.get(k).MODULE_NAME.get(l)).setIcon(R.drawable.ic_menu_send);
+//                            topChannelMenu.add(accessDataObjects.get(k).MODULE_NAME.get(l));
+                        }
+                    }
+
+                    System.out.println("ARRAY:" + accessDataObjects.get(1).MODULE_NAME.size());
+
+                } else {
+                    mView.showError(Title.REGISTRATION, jo.getString(JSONFlag.MESSAGE), null);
+                }
+            } else {
+                mView.showError(Title.REGISTRATION, Message.ERROR_FETCHING_DATA, null);
+            }
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+            mView.showError("", Message.RUNTIME_ERROR, null);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            mView.showError("", Message.JSON_ERROR, null);
+        }
+    }
+    public void processLocationResponse(Response response) {
+        System.out.println("LOCATION:"+response.getResponse());
+        try {
+            if (response.getStatus() == Status.SUCCESS) {
+                JSONObject jo = new JSONObject(response.getResponse());
+
+                if (jo.getString(JSONFlag.STATUS).equals(JSONFlag.SUCCESSFUL)) {
+                    JSONObject jo2 = jo.getJSONObject("result_data");
+                    if(jo2.getInt("isLocSet") == 1) {
+                        Constants.LOCATION_STATUS = 1;
+                        Constants.LONGITUDE = jo2.getDouble("longitude");
+                        Constants.LATITUDE = jo2.getDouble("latitude");
+                        Constants.LAST_UPDATE = jo2.getString("last_updated");
+                        Intent intent = new Intent(mView.getActivity(),MapActivity.class);
+                        mView.getActivity(). startActivity(intent);
+                    }else{
+                        Constants.LOCATION_STATUS = 0;
+                        Constants.LONGITUDE = 0.0;
+                        Constants.LATITUDE = 0.0;
+                        Constants.LAST_UPDATE = "";
+                        Intent intent = new Intent(mView.getActivity(),MapActivity.class);
+                        mView.getActivity(). startActivity(intent);
+                    }
+                } else {
+                    mView.showError(Title.REGISTRATION, jo.getString(JSONFlag.MESSAGE), null);
+                }
+            } else {
+                mView.showError(Title.REGISTRATION, Message.ERROR_FETCHING_DATA, null);
+            }
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+            mView.showError("", Message.RUNTIME_ERROR, null);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            mView.showError("", Message.JSON_ERROR, null);
+        }
+    }
+}

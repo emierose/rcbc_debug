@@ -13,6 +13,7 @@ import java.net.UnknownHostException;
 
 import UnlitechDevFramework.src.ud.framework.data.Response;
 import UnlitechDevFramework.src.ud.framework.utilities.WebServiceUtil;
+import bluetooth.em.com.projectcountry.R;
 
 public abstract class NetworkTask<Params, Progress, Result> extends AsyncTask<Params, Progress, Result> {
 
@@ -70,7 +71,7 @@ public abstract class NetworkTask<Params, Progress, Result> extends AsyncTask<Pa
         mDialog = new ProgressDialog(mContext);
 //        mDialog.setTitle(title);
 
-
+        mDialog.setProgressStyle(R.style.AppCompatAlertDialogStyle);
         mDialog.setMessage(message);
         mDialog.setCancelable(false);
         mDialog.setIndeterminate(true);

@@ -1,4 +1,4 @@
-package bluetooth.em.com.projectcountry;
+package bluetooth.em.com.projectcountry.activity;
 
 import android.app.Activity;
 import android.content.Context;
@@ -13,13 +13,14 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.dd.processbutton.iml.ActionProcessButton;
+
 import java.util.ArrayList;
 
 import UnlitechDevFramework.src.ud.framework.data.Response;
+import bluetooth.em.com.projectcountry.R;
 import bluetooth.em.com.projectcountry.controller.RegistrationController;
 import bluetooth.em.com.projectcountry.data.CountryObjects;
-import bluetooth.em.com.projectcountry.data.Message;
-import bluetooth.em.com.projectcountry.data.Title;
 import bluetooth.em.com.projectcountry.model.RegistrationModel;
 import bluetooth.em.com.projectcountry.view.RegistrationHolder;
 import bluetooth.em.com.projectcountry.view.RegistrationInterface;
@@ -44,7 +45,7 @@ public class Registration extends AppCompatActivity implements RegistrationInter
         findViewById(R.id.btn_submit).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mController.submit();
+                mController.register();
             }
         });
         Animation animation;
@@ -63,7 +64,9 @@ public class Registration extends AppCompatActivity implements RegistrationInter
         holder.p_country.setOnItemSelectedListener(mController.on_p_country_select());
         holder.s_country.setOnItemSelectedListener(mController.on_s_country_select());
         holder.t_country.setOnItemSelectedListener(mController.on_t_country_select());
+        holder.bank.setOnItemSelectedListener(mController.on_bank_select());
         holder.bday_country.setOnItemSelectedListener(mController.on_bplace_country_select());
+
     }
 
 
@@ -81,6 +84,7 @@ public class Registration extends AppCompatActivity implements RegistrationInter
     @Override
     public RegistrationHolder getregistrationCredentials() {
         RegistrationHolder holder = new RegistrationHolder();
+        holder.submit = (ActionProcessButton) findViewById(R.id.btn_submit);
         holder.username = (EditText)findViewById(R.id.et_username);
         holder.tpass = (EditText)findViewById(R.id.et_password);
         holder.re_tpass = (EditText)findViewById(R.id.et_conf_password);
@@ -115,8 +119,8 @@ public class Registration extends AppCompatActivity implements RegistrationInter
         holder.p_email = (EditText)findViewById(R.id.et_p_email);
         holder.s_email = (EditText)findViewById(R.id.et_s_email);
         holder.t_email = (EditText)findViewById(R.id.et_t_email);
-        holder.branch = (EditText)findViewById(R.id.et_branch);
-        holder.code = (EditText)findViewById(R.id.et_code);
+        holder.branch = (Spinner)findViewById(R.id.sp_branch);
+        holder.bank = (Spinner)findViewById(R.id.sp_bank);
         holder.text = (TextView)findViewById(R.id.login);
         holder.tv_p_country = (TextView)findViewById(R.id.tv_l_p_country);
         holder.tv_p_state = (TextView)findViewById(R.id.tv_l_p_state);
@@ -152,13 +156,14 @@ public class Registration extends AppCompatActivity implements RegistrationInter
     public void errorOnRequest(Exception exception) {
         RegistrationHolder holder = getregistrationCredentials();
 //        holder.tv_p_country.setCompoundDrawables(getContext().getResources().getDrawable(R.drawable.ic_reload),null,null,null);
-        holder.tv_p_country.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_reload,0,0,0);        showError(Title.REGISTRATION, Message.EXCEPTION, null);
+        holder.tv_p_country.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_reload, 0, 0, 0);
+//        showError(Title.REGISTRATION, Message.EXCEPTION, null);
     }
 
     @Override
     public void responseReceived(Response response, int type) {
 
-        mController.processResponse(response,type);
+        mController.processResponse(response, type);
     }
     @Override
     public void processRegistration(Response response, int type) {

@@ -1,8 +1,11 @@
 package bluetooth.em.com.projectcountry.view;
 
+import android.support.design.widget.TextInputLayout;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+
+import com.dd.processbutton.iml.ActionProcessButton;
 
 /**
  * Created by Em on 5/6/2016.
@@ -15,6 +18,14 @@ public class RegistrationHolder {
     public EditText middlename;
     public EditText lastname;
     public EditText bdate;
+
+//    public TextInputLayout lo_tpass;
+//    public TextInputLayout lo_re_tpass;
+//    public TextInputLayout lo_firstname;
+//    public TextInputLayout lo_middlename;
+//    public TextInputLayout lo_lastname;
+//    public TextInputLayout lo_bdate;
+    
     public Spinner bday_country;
     public Spinner bday_state;
     public Spinner status;
@@ -41,8 +52,8 @@ public class RegistrationHolder {
     public EditText p_email;
     public EditText s_email;
     public EditText t_email;
-    public EditText branch;
-    public EditText code;
+    public Spinner branch;
+    public Spinner bank;
 
     public TextView text;
     public TextView tv_p_country;
@@ -54,4 +65,9 @@ public class RegistrationHolder {
     public TextView tv_place_country;
     public TextView tv_place_state;
     public TextView tv_nationality;
+
+    public TextInputLayout lo_username;
+    public TextInputLayout lo_password;
+    public ActionProcessButton btnSignIn;
+    public ActionProcessButton submit;
 }

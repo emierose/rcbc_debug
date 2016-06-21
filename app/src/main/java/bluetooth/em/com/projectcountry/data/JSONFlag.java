@@ -5,6 +5,12 @@ package bluetooth.em.com.projectcountry.data;
  */
 public class JSONFlag {
     public static String STATUS = "result_status";
-    public static String SUCCESS = "Successful";
+    public static String SUCCESSFUL = "Successful";
     public static String MESSAGE ="result_message";
+
+    public static final int SUCCESS = 1;
+
+    public static String USERNAME ="Account_Name";
+    public static String CLICNETID ="Account_ID";
+    public static String SESSIONID ="Session_ID";
 }

@@ -11,4 +11,5 @@ public class Message {
     public static String RUNTIME_ERROR ="Sorry something went wrong. [CODE:001]";
     public static String JSON_ERROR ="Sorry something went wrong. [CODE:002]";
     public static String ERROR_FETCHING_DATA = "Error in fetching data";
+
 }

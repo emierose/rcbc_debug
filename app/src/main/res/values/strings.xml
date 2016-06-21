@@ -1,6 +1,6 @@
 <resources>
-    <string name="app_name">Sample</string>
-
+    <string name="app_name">RCBC</string>
+    <string name="google_api_key">AIzaSyDXBoMwnqZCFfgExbuJcHXcen3Q3f5zZrI</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
@@ -25,9 +25,9 @@
     <string name="tin">TIN Number</string>
     <string name="sss">SSS Number</string>
     <string name="passport">Passport Number</string>
-    <string name="acr">ACR</string>
+    <string name="acr">Alien Certificate of Registration</string>
     <string name="cardno">Card Number</string>
-    <string name="ccv">CCV</string>
+    <string name="ccv">Credit Card CCV Number</string>
     <string name="present_add">Primary Address</string>
     <string name="present_country"> Country</string>
     <string name="present_state">State</string>
@@ -52,5 +52,12 @@
     <string name="married">Married</string>
     <string name="divorced">Divorced</string>
     <string name="widowed">Widowed</string>
+    <string name="bank"> Bank</string>
 
+    <string name="sender">Sender</string>
+    <string name="location">Location</string>
+
+    <string name="email">E-mail Address</string>
+    <string name="cancel">CANCEL</string>
+    <string name="submit2">SUBMIT</string>
 </resources>
