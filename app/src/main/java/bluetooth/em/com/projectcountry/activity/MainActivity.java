@@ -145,6 +145,9 @@ public class MainActivity extends AppCompatActivity
             fragment = new PeraPadalaSend();
             tag = "Pera Padala Send";
         }
+        if(name.equals("View Merchants Locations")){
+            viewMerchantsLocations();
+        }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         if (fragment != null) {
@@ -156,6 +159,12 @@ public class MainActivity extends AppCompatActivity
             getSupportActionBar().setTitle(tag);
         }
         return true;
+    }
+
+    private void viewMerchantsLocations() {
+//        Intent intent = new Intent(getActivity(), MerchantLocationActivity.class);
+//        startActivity(intent);
+        mCOntroller.requestMerchantLocations();
     }
 
     private void checkLocation() {
@@ -206,6 +215,6 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void secondResponseReceived(Response response, int type) {
-        mCOntroller.processLocationResponse(response);
+        mCOntroller.processLocationResponse(response,type);
     }
 }
