@@ -142,8 +142,8 @@ public class MainmenuController {
                                 JSONObject jOb  = array.getJSONObject(i);
                                 ob.DISPLAYNAME = jOb.getString("display_name");
                                 ob.CLIENTID = jOb.getString("client_id");
-                                ob.LONGITUDE = jOb.getString("longitude");
-                                ob.LATITUTE = jOb.getString("latitude");
+                                ob.LONGITUDE = jOb.getDouble("longitude");
+                                ob.LATITUTE = jOb.getDouble("latitude");
                                 ob.COUNTRY = jOb.getString("country");
                                 ob.COUNTRYDESC = jOb.getString("country_desc");
                                 ob.STATEDESC = jOb.getString("state_desc");

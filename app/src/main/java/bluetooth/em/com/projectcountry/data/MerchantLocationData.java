@@ -6,8 +6,8 @@ package bluetooth.em.com.projectcountry.data;
 public class MerchantLocationData {
     public String DISPLAYNAME;
     public String CLIENTID;
-    public String LONGITUDE;
-    public String LATITUTE;
+    public Double LONGITUDE;
+    public Double LATITUTE;
     public String COUNTRY;
     public String COUNTRYDESC;
     public String STATEDESC;

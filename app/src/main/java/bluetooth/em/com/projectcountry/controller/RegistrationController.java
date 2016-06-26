@@ -111,11 +111,13 @@ public class RegistrationController {
             message = "SSS Number is required.";
         }else if(ViewUtil.isEmpty(holder.passport)) {
             message = "Passport Number is required.";
-        }else if(ViewUtil.isEmpty(holder.cadrno)) {
-            message = "Card Number is required.";
-        }else if(ViewUtil.isEmpty(holder.acr)) {
-            message = "Credit Card CCV Number is required.";
-        }else if(ViewUtil.isEmpty(holder.p_add)) {
+        }
+//        else if(ViewUtil.isEmpty(holder.cadrno)) {
+//            message = "Card Number is required.";
+//        }else if(ViewUtil.isEmpty(holder.acr)) {
+//            message = "Credit Card CCV Number is required.";
+//        }
+        else if(ViewUtil.isEmpty(holder.p_add)) {
             message = "Primary Address is required.";
         }else if(holder.p_country.getSelectedItemPosition() == 0) {
             message = "Please choose country";

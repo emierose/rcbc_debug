@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
+import android.location.Criteria;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
@@ -25,6 +26,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -66,10 +68,10 @@ public class MapMerchantLocationFragment extends SupportMapFragment implements G
         this.view= view;
         setHasOptionsMenu(true);
 
-        mModel = new AppGeneralModel();
-        mModel.registerObserver(this);
-        mController = new MerchantLocationController(this, mModel);
-        mController.requestMerchantLocation();
+//        mModel = new AppGeneralModel();
+//        mModel.registerObserver(this);
+//        mController = new MerchantLocationController(this, mModel);
+//        mController.requestMerchantLocation();
         mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
@@ -116,16 +118,16 @@ public class MapMerchantLocationFragment extends SupportMapFragment implements G
                 // for ActivityCompat#requestPermissions for more details.
                 return;
             }
-            Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            System.out.println("LOC:" + location);
-            if (location != null) {
-                String message = String.format(
-                        "Current Location \n Longitude: %1$s \n Latitude: %2$s",
-                        location.getLongitude(), location.getLatitude()
-                );
-                Toast.makeText(getActivity(), message,
-                        Toast.LENGTH_LONG).show();
-            }
+//            Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+//            System.out.println("LOC:" + location);
+//            if (location != null) {
+//                String message = String.format(
+//                        "Current Location \n Longitude: %1$s \n Latitude: %2$s",
+//                        location.getLongitude(), location.getLatitude()
+//                );
+//                Toast.makeText(getActivity(), message,
+//                        Toast.LENGTH_LONG).show();
+//            }else{
             List<String> providers = locationManager.getProviders(true);
             Location bestLocation = null;
             for (String provider : providers) {
@@ -136,6 +138,7 @@ public class MapMerchantLocationFragment extends SupportMapFragment implements G
                     continue;
                 }
                 if (bestLocation == null || l.getAccuracy() < bestLocation.getAccuracy()) {
+                    System.out.println("hey!");
                     System.out.println("found best last known location: %s" + l);
                     bestLocation = l;
                     MarkerOptions options = new MarkerOptions().position(new LatLng(l.getLatitude(), l.getLongitude()));
@@ -143,12 +146,26 @@ public class MapMerchantLocationFragment extends SupportMapFragment implements G
                     options.icon(BitmapDescriptorFactory.fromBitmap(
                             BitmapFactory.decodeResource(getResources(), R.mipmap.ic_marker)));
                     getMap().addMarker(options);
-                    CameraUpdate yourLocation = CameraUpdateFactory.newLatLngZoom(new LatLng(l.getLatitude(), l.getLongitude()), 12);
+                    CameraUpdate yourLocation = CameraUpdateFactory.newLatLngZoom(new LatLng(l.getLatitude(), l.getLongitude()), 5);
                     getMap().animateCamera(yourLocation);
                     Constants.LATITUDE = l.getLatitude();
                     Constants.LONGITUDE = l.getLongitude();
-                }
-            }
+                  }
+//                else{
+//                    System.out.println("NO CHOICE TE");
+//                    CameraUpdate yourLocation = CameraUpdateFactory.newLatLngZoom(new LatLng(MainmenuController.merchantData.get(0).LATITUTE, MainmenuController.merchantData.get(0).LATITUTE), 13);
+//                    getMap().animateCamera(yourLocation);
+//                }
+               }
+        if(bestLocation == null){
+            System.out.println("NO CHOICE TE");
+            CameraUpdate yourLocation = CameraUpdateFactory.newLatLngZoom(new LatLng(MainmenuController.merchantData.get(0).LATITUTE, MainmenuController.merchantData.get(0).LATITUTE), 13);
+
+                    getMap().animateCamera(yourLocation);
+
+        }
+
+//            }
 //        }
 
     }
@@ -157,16 +174,29 @@ public class MapMerchantLocationFragment extends SupportMapFragment implements G
         System.out.println("HEY");
       for(int i=0;i<  MainmenuController.merchantData.size();i++){
           System.out.println("LOC:"+i +" LAT:"+Double.valueOf(MainmenuController.merchantData.get(i).LATITUTE) + " LONG:"+Double.valueOf(MainmenuController.merchantData.get(i).LONGITUDE));
-          MarkerOptions options = new MarkerOptions().position(new LatLng(Double.valueOf(MainmenuController.merchantData.get(i).LATITUTE), Double.valueOf(MainmenuController.merchantData.get(i).LATITUTE)));
-          options.title(MainmenuController.merchantData.get(i).DISPLAYNAME);
-          options.icon(BitmapDescriptorFactory.fromBitmap(
-                  BitmapFactory.decodeResource(getResources(), R.mipmap.ic_marker)));
-          getMap().addMarker(options);
-//          CameraUpdate yourLocation = CameraUpdateFactory.newLatLngZoom(new LatLng(l.getLatitude(), l.getLongitude()), 12);
-//          getMap().animateCamera(yourLocation);
+          createMarker(MainmenuController.merchantData.get(i).LATITUTE, MainmenuController.merchantData.get(i).LONGITUDE, MainmenuController.merchantData.get(i).DISPLAYNAME, R.mipmap.ic_marker);
       }
+        CameraUpdate yourLocation = CameraUpdateFactory.newLatLngZoom(new LatLng(MainmenuController.merchantData.get(0).LATITUTE, MainmenuController.merchantData.get(0).LATITUTE), 13);
+        getMap().animateCamera(yourLocation);
+
+
     }
 
+    protected void createMarker(double latitude, double longitude, String title, int iconResID) {
+
+//        return getMap().addMarker(new MarkerOptions()
+//                .position(new LatLng(latitude, longitude))
+//                .anchor(0.5f, 0.5f)
+//                .title(title);
+//                .icon(BitmapDescriptorFactory.fromResource(iconResID)));
+          final LatLng MELBOURNE = new LatLng(latitude, longitude);
+                 getMap().addMarker(new MarkerOptions()
+                         .position(MELBOURNE)
+                         .title(title)
+                         .snippet("Population: 4,137,400")
+                         .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_marker)));
+
+    }
     @Override
     public void secondResponseReceived(Response response, int type) {
 
